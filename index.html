@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle de Estoque</title>
+    <link rel="stylesheet" href ="styles.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <header>
+        <h1>Controle de Estoque</h1>
+            <p>Gerencie seu produtos em um lugar só</p>
+    </header>
+
+    <main>
+        <section>
+            <h2>Cadastrar produto</h2>
+
+            <form id="form-produto">
+                <label for="nome">Nome do produto</label>
+                <input type="text" id="nome" required>
+
+                <label for="preco">Preço (R$)</label>
+                <input type="number" id="preco" min="0.01"
+                    step="0.01" required>
+
+                <label for="quantidade">Quantidade</label>
+                <input type="number" id="quantidade" min="0"
+                    step="1" required>
+
+                <button type="submit">Cadastrar Produto</button>
+            </form>
+        </section>
+
+        <section>
+            <h2>Produtos cadastrados</h2>
+
+            <input 
+                type="search"
+                id="busca"
+                placeholder="Buscar produto..."
+                aria-label="Buscar produto"
+            >
+
+            <p id="resumo">Nenhum produto cadastrado.</p>
+
+            <div id="lista-produtos"></div>
+        </section>
+    </main>
+</body>
+</html>
