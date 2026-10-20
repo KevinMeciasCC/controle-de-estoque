@@ -1,3 +1,5 @@
+
+/* Configurações gerais da página */
 body {
     background-color: #f5f7fa;
     color: #222;
@@ -5,12 +7,14 @@ body {
     margin: 15px;
 }
 
+/* Área principal do conteúdo */
 main {
     max-width: 1000px;
     margin: 35px auto;
     padding: 0 20px;
 }
 
+/* Cartões das seções principais */
 section {
     background-color: #fff;
     padding: 24px;
@@ -19,6 +23,7 @@ section {
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.05);
 }
 
+/* Campos de entrada */
 input {
     padding: 4px;
     font-size: 16px;
@@ -28,13 +33,15 @@ input {
     box-sizing: border-box;
     margin-bottom: 8px;
     display: block;
-} 
+}
 
+/* Textos dos campos */
 label {
     font-weight: bold;
     font-size: 14px;
 }
 
+/* Estilo padrão dos botões */
 button {
     background-color: #007bff;
     color: #ffffff;
@@ -46,6 +53,101 @@ button {
     margin-top: 10px;
 }
 
-button:hover{
+/* Efeito ao passar o mouse nos botões padrão */
+button:hover {
     background-color: #007bffcb;
+}
+
+/* Aviso de estoque baixo */
+.estoque-baixo {
+    color: #dc2626;
+    font-weight: bold;
+}
+
+/* Cartão individual de cada produto */
+.cartao-produto {
+    background-color: #ffffff;
+    padding: 16px;
+    margin-bottom: 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Área que organiza os botões do produto */
+.area-botoes {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+/* Espaçamento interno dos botões dos produtos */
+.area-botoes button {
+    padding: 8px 14px;
+    cursor: pointer;
+}
+
+/* Botão de editar */
+.botao-editar {
+    background-color: #2563eb;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+}
+
+/* Botão de excluir */
+.botao-excluir {
+    background-color: #dc2626;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+}
+
+/* Efeito ao passar o mouse no botão de editar */
+.botao-editar:hover {
+    background-color: #1d4ed8;
+}
+
+/* Efeito ao passar o mouse no botão de excluir */
+.botao-excluir:hover {
+    background-color: #b91c1c;
+}
+
+/* Nome do produto no cartão */
+.nome-produto {
+    font-size: 18px;
+    color: #1e293b;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+/* Texto das informações do produto */
+.cartao-produto p {
+    margin-top: 0;
+    margin-bottom: 12px;
+    line-height: 1.6;
+}
+
+/* Ajustes para telas pequenas, como celulares */
+@media (max-width: 600px) {
+    /* Reduz as margens externas */
+    body {
+        margin: 10px;
+    }
+
+    /* Reduz o espaço interno das seções principais */
+    main section {
+        padding: 16px;
+    }
+
+    /* Permite que os botões se reorganizem */
+    .area-botoes {
+        flex-wrap: wrap;
+    }
+
+    /* Mantém os botões confortáveis para tocar */
+    .area-botoes button {
+        flex: 1;
+        min-width: 100px;
+    }
 }

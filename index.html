@@ -1,50 +1,82 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Controle de Estoque</title>
-    <link rel="stylesheet" href ="styles.css">
+
+    <link rel="stylesheet" href="styles.css">
     <script src="script.js" defer></script>
 </head>
 <body>
+    <!-- Cabeçalho da página -->
     <header>
         <h1>Controle de Estoque</h1>
-            <p>Gerencie seu produtos em um lugar só</p>
+        <p>Gerencie seus produtos em um lugar só</p>
     </header>
 
     <main>
+        <!-- Seção de cadastro de produtos -->
         <section>
             <h2>Cadastrar produto</h2>
 
             <form id="form-produto">
                 <label for="nome">Nome do produto</label>
-                <input type="text" id="nome" required>
+                <input
+                    type="text"
+                    id="nome"
+                    required
+                >
 
                 <label for="preco">Preço (R$)</label>
-                <input type="number" id="preco" min="0.01"
-                    step="0.01" required>
+                <input
+                    type="number"
+                    id="preco"
+                    min="0.01"
+                    step="0.01"
+                    required
+                >
 
                 <label for="quantidade">Quantidade</label>
-                <input type="number" id="quantidade" min="0"
-                    step="1" required>
+                <input
+                    type="number"
+                    id="quantidade"
+                    min="0"
+                    step="1"
+                    required
+                >
 
                 <button type="submit">Cadastrar Produto</button>
             </form>
         </section>
 
+        <!-- Seção de consulta e gerenciamento do estoque -->
         <section>
             <h2>Produtos cadastrados</h2>
 
-            <input 
-                type="search"
-                id="busca"
-                placeholder="Buscar produto..."
-                aria-label="Buscar produto"
+            <!-- Campo de busca de produtos -->
+            <label for="busca-produto">Buscar produto:</label>
+            <input
+                type="text"
+                id="busca-produto"
+                placeholder="Digite o nome do produto..."
             >
 
+            <!-- Mensagens e indicadores do estoque -->
             <p id="resumo">Nenhum produto cadastrado.</p>
 
+            <p id="resumo-estoque">
+                Produtos com estoque baixo: 0
+            </p>
+
+            <!-- Valor financeiro de todo o estoque -->
+            <p id="valor-total">
+                Valor total do estoque: R$ 0,00
+            </p>
+
+            <!-- Lista dinâmica de produtos criada pelo JavaScript -->
             <div id="lista-produtos"></div>
         </section>
     </main>
