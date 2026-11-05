@@ -6,7 +6,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Controle de Estoque</title>
+    <meta
+        name="description"
+        content="VEYRA: sistema de gerenciamento de estoque para cadastrar, consultar e acompanhar produtos."
+    >
+
+    <title>VEYRA | Inventory Management</title>
 
     <link rel="stylesheet" href="styles.css">
 
@@ -35,25 +40,34 @@
 
                 <span class="navegacao-titulo">MENU PRINCIPAL</span>
 
-                <a href="#visao-geral" class="item-navegacao ativo">
-                    <span class="icone-navegacao">▦</span>
+                <a
+                    href="#visao-geral"
+                    class="item-navegacao"
+                >
+                    <span class="icone-navegacao" aria-hidden="true">▦</span>
                     Visão geral
                 </a>
 
-                <a href="#produtos" class="item-navegacao">
-                    <span class="icone-navegacao">▤</span>
+                <a
+                    href="#produtos"
+                    class="item-navegacao"
+                >
+                    <span class="icone-navegacao" aria-hidden="true">▤</span>
                     Produtos
                 </a>
 
-                <a href="#cadastro" class="item-navegacao">
-                    <span class="icone-navegacao">＋</span>
+                <a
+                    href="#cadastro"
+                    class="item-navegacao"
+                >
+                    <span class="icone-navegacao" aria-hidden="true">＋</span>
                     Cadastrar produto
                 </a>
 
             </nav>
 
             <div class="sidebar-rodape">
-                <span class="status-sistema"></span>
+                <span class="status-sistema" aria-hidden="true"></span>
                 Sistema de estoque
                 <small>Versão 1.0</small>
             </div>
@@ -67,6 +81,7 @@
             <header class="cabecalho">
 
                 <div class="cabecalho-texto">
+
                     <span class="identificador-pagina">
                         PAINEL DE CONTROLE
                     </span>
@@ -76,13 +91,16 @@
                     <p>
                         Acompanhe e gerencie os produtos do seu estoque.
                     </p>
+
                 </div>
 
                 <div class="cabecalho-acoes">
+
                     <span class="usuario-sistema">
-                        <span class="usuario-icone">U</span>
+                        <span class="usuario-icone" aria-hidden="true">U</span>
                         Administrador
                     </span>
+
                 </div>
 
             </header>
@@ -105,16 +123,19 @@
             >
 
                 <div class="titulo-secao">
+
                     <div>
                         <span class="identificador-pagina">RESUMO</span>
                         <h3>Indicadores do estoque</h3>
                     </div>
+
                 </div>
 
                 <div class="indicadores">
 
                     <article class="cartao-indicador">
-                        <div class="indicador-icone">
+
+                        <div class="indicador-icone" aria-hidden="true">
                             ▤
                         </div>
 
@@ -122,10 +143,12 @@
                             <span>Produtos cadastrados</span>
                             <strong id="resumo-estoque">0</strong>
                         </div>
+
                     </article>
 
                     <article class="cartao-indicador">
-                        <div class="indicador-icone indicador-icone-valor">
+
+                        <div class="indicador-icone indicador-icone-valor" aria-hidden="true">
                             R$
                         </div>
 
@@ -133,6 +156,7 @@
                             <span>Valor total em estoque</span>
                             <strong id="valor-total">R$ 0,00</strong>
                         </div>
+
                     </article>
 
                 </div>
@@ -147,16 +171,19 @@
             >
 
                 <div class="titulo-secao">
+
                     <div>
                         <span class="identificador-pagina">GERENCIAMENTO</span>
                         <h3>Cadastrar produto</h3>
                         <p>Adicione um novo item ao seu estoque.</p>
                     </div>
+
                 </div>
 
                 <form id="form-produto" class="form-produto">
 
                     <div class="campo-formulario">
+
                         <label for="nome">Nome do produto</label>
 
                         <input
@@ -166,9 +193,11 @@
                             placeholder="Ex.: Coca-Cola"
                             required
                         >
+
                     </div>
 
                     <div class="campo-formulario">
+
                         <label for="preco">Preço unitário</label>
 
                         <input
@@ -180,9 +209,11 @@
                             step="0.01"
                             required
                         >
+
                     </div>
 
                     <div class="campo-formulario">
+
                         <label for="quantidade">Quantidade</label>
 
                         <input
@@ -194,13 +225,16 @@
                             step="1"
                             required
                         >
+
                     </div>
 
                     <div class="acao-formulario">
+
                         <button type="submit" class="botao-principal">
-                            <span>＋</span>
+                            <span aria-hidden="true">＋</span>
                             Adicionar produto
                         </button>
+
                     </div>
 
                 </form>
@@ -230,7 +264,7 @@
 
                     <div class="campo-busca">
 
-                        <span class="icone-busca">⌕</span>
+                        <span class="icone-busca" aria-hidden="true">⌕</span>
 
                         <input
                             type="search"
@@ -241,18 +275,29 @@
 
                     </div>
 
-                    <p id="resumo" class="mensagem-resumo"></p>
+                    <p
+                        id="resumo"
+                        class="mensagem-resumo"
+                        aria-live="polite"
+                    ></p>
 
                 </div>
 
 
                 <!-- Os cartões dos produtos são gerados pelo JavaScript -->
-                <div id="lista-produtos" class="lista-produtos"></div>
+                <div
+                    id="lista-produtos"
+                    class="lista-produtos"
+                ></div>
 
             </section>
 
+
+            <!-- Rodapé -->
             <footer class="rodape-conteudo">
+
                 <p>VEYRA · Inventory management</p>
+
             </footer>
 
         </main>

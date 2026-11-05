@@ -489,3 +489,59 @@ formulario.addEventListener("submit", function(event) {
 
     formulario.reset();
 });
+
+// Controla o destaque dos itens do menu lateral
+const linksNavegacao = document.querySelectorAll(".item-navegacao");
+
+const secoesNavegacao = document.querySelectorAll(
+    "#visao-geral, #produtos, #cadastro"
+);
+
+// Atualiza o item ativo no menu
+function atualizarNavegacao(idSecao) {
+    linksNavegacao.forEach(function(link) {
+        const secaoAtiva = link.getAttribute("href") === "#" + idSecao;
+
+        link.classList.toggle("ativo", secaoAtiva);
+
+        if (secaoAtiva) {
+            link.setAttribute("aria-current", "location");
+        } else {
+            link.removeAttribute("aria-current");
+        }
+    });
+}
+
+// Detecta qual seção está sendo visualizada
+const observadorNavegacao = new IntersectionObserver(
+    function(entradas) {
+        const secoesVisiveis = entradas
+            .filter(function(entrada) {
+                return entrada.isIntersecting;
+            })
+            .sort(function(a, b) {
+                return b.intersectionRatio - a.intersectionRatio;
+            });
+
+        if (secoesVisiveis.length > 0) {
+            atualizarNavegacao(secoesVisiveis[0].target.id);
+        }
+    },
+    {
+        rootMargin: "-20% 0px -60% 0px",
+        threshold: [0, 0.1, 0.25, 0.5, 0.75]
+    }
+);
+
+// Observa todas as seções do conteúdo
+secoesNavegacao.forEach(function(secao) {
+    observadorNavegacao.observe(secao);
+});
+
+// Atualiza o menu imediatamente ao clicar
+linksNavegacao.forEach(function(link) {
+    link.addEventListener("click", function() {
+        const idSecao = link.getAttribute("href").substring(1);
+        atualizarNavegacao(idSecao);
+    });
+});
