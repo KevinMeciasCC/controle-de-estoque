@@ -1,6 +1,7 @@
 
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,77 +9,256 @@
     <title>Controle de Estoque</title>
 
     <link rel="stylesheet" href="styles.css">
+
     <script src="script.js" defer></script>
 </head>
+
 <body>
-    <!-- Cabeçalho da página -->
-    <header>
-        <h1>Controle de Estoque</h1>
-        <p>Gerencie seus produtos em um lugar só</p>
-    </header>
 
-    <main>
-        <!-- Seção de cadastro de produtos -->
-        <section>
-            <h2>Cadastrar produto</h2>
+    <div class="layout">
 
-            <form id="form-produto">
-                <label for="nome">Nome do produto</label>
-                <input
-                    type="text"
-                    id="nome"
-                    required
-                >
+        <!-- Menu lateral -->
+        <aside class="sidebar">
 
-                <label for="preco">Preço (R$)</label>
-                <input
-                    type="number"
-                    id="preco"
-                    min="0.01"
-                    step="0.01"
-                    required
-                >
+            <div class="identidade">
+                <div class="identidade-icone">
+                    CE
+                </div>
 
-                <label for="quantidade">Quantidade</label>
-                <input
-                    type="number"
-                    id="quantidade"
-                    min="0"
-                    step="1"
-                    required
-                >
+                <div class="identidade-texto">
+                    <h1>StockFlow</h1>
+                    <span>Controle de Estoque</span>
+                </div>
+            </div>
 
-                <button type="submit">Cadastrar Produto</button>
-            </form>
-        </section>
+            <nav class="navegacao" aria-label="Navegação principal">
 
-        <!-- Seção de consulta e gerenciamento do estoque -->
-        <section>
-            <h2>Produtos cadastrados</h2>
+                <span class="navegacao-titulo">MENU PRINCIPAL</span>
 
-            <!-- Campo de busca de produtos -->
-            <label for="busca-produto">Buscar produto:</label>
-            <input
-                type="text"
-                id="busca-produto"
-                placeholder="Digite o nome do produto..."
+                <a href="#visao-geral" class="item-navegacao ativo">
+                    <span class="icone-navegacao">▦</span>
+                    Visão geral
+                </a>
+
+                <a href="#produtos" class="item-navegacao">
+                    <span class="icone-navegacao">▤</span>
+                    Produtos
+                </a>
+
+                <a href="#cadastro" class="item-navegacao">
+                    <span class="icone-navegacao">＋</span>
+                    Cadastrar produto
+                </a>
+
+            </nav>
+
+            <div class="sidebar-rodape">
+                <span class="status-sistema"></span>
+                Sistema de estoque
+                <small>Versão 1.0</small>
+            </div>
+
+        </aside>
+
+
+        <!-- Conteúdo principal -->
+        <main class="conteudo-principal">
+
+            <header class="cabecalho">
+
+                <div class="cabecalho-texto">
+                    <span class="identificador-pagina">
+                        PAINEL DE CONTROLE
+                    </span>
+
+                    <h2>Visão geral</h2>
+
+                    <p>
+                        Acompanhe e gerencie os produtos do seu estoque.
+                    </p>
+                </div>
+
+                <div class="cabecalho-acoes">
+                    <span class="usuario-sistema">
+                        <span class="usuario-icone">U</span>
+                        Administrador
+                    </span>
+                </div>
+
+            </header>
+
+
+            <!-- Aviso de erro do armazenamento -->
+            <p
+                id="erro-armazenamento"
+                class="aviso-armazenamento"
+                role="alert"
+                hidden
+            ></p>
+
+
+            <!-- Indicadores do estoque -->
+            <section
+                id="visao-geral"
+                class="secao-indicadores"
+                aria-label="Indicadores do estoque"
             >
 
-            <!-- Mensagens e indicadores do estoque -->
-            <p id="resumo">Nenhum produto cadastrado.</p>
+                <div class="titulo-secao">
+                    <div>
+                        <span class="identificador-pagina">RESUMO</span>
+                        <h3>Indicadores do estoque</h3>
+                    </div>
+                </div>
 
-            <p id="resumo-estoque">
-                Produtos com estoque baixo: 0
-            </p>
+                <div class="indicadores">
 
-            <!-- Valor financeiro de todo o estoque -->
-            <p id="valor-total">
-                Valor total do estoque: R$ 0,00
-            </p>
+                    <article class="cartao-indicador">
+                        <div class="indicador-icone">
+                            ▤
+                        </div>
 
-            <!-- Lista dinâmica de produtos criada pelo JavaScript -->
-            <div id="lista-produtos"></div>
-        </section>
-    </main>
+                        <div class="indicador-conteudo">
+                            <span>Produtos cadastrados</span>
+                            <strong id="resumo-estoque">0</strong>
+                        </div>
+                    </article>
+
+                    <article class="cartao-indicador">
+                        <div class="indicador-icone indicador-icone-valor">
+                            R$
+                        </div>
+
+                        <div class="indicador-conteudo">
+                            <span>Valor total em estoque</span>
+                            <strong id="valor-total">R$ 0,00</strong>
+                        </div>
+                    </article>
+
+                </div>
+
+            </section>
+
+
+            <!-- Cadastro de produtos -->
+            <section
+                id="cadastro"
+                class="secao-cadastro"
+            >
+
+                <div class="titulo-secao">
+                    <div>
+                        <span class="identificador-pagina">GERENCIAMENTO</span>
+                        <h3>Cadastrar produto</h3>
+                        <p>Adicione um novo item ao seu estoque.</p>
+                    </div>
+                </div>
+
+                <form id="form-produto" class="form-produto">
+
+                    <div class="campo-formulario">
+                        <label for="nome">Nome do produto</label>
+
+                        <input
+                            type="text"
+                            id="nome"
+                            name="nome"
+                            placeholder="Ex.: Coca-Cola"
+                            required
+                        >
+                    </div>
+
+                    <div class="campo-formulario">
+                        <label for="preco">Preço unitário</label>
+
+                        <input
+                            type="number"
+                            id="preco"
+                            name="preco"
+                            placeholder="0,00"
+                            min="0.01"
+                            step="0.01"
+                            required
+                        >
+                    </div>
+
+                    <div class="campo-formulario">
+                        <label for="quantidade">Quantidade</label>
+
+                        <input
+                            type="number"
+                            id="quantidade"
+                            name="quantidade"
+                            placeholder="0"
+                            min="0"
+                            step="1"
+                            required
+                        >
+                    </div>
+
+                    <div class="acao-formulario">
+                        <button type="submit" class="botao-principal">
+                            <span>＋</span>
+                            Adicionar produto
+                        </button>
+                    </div>
+
+                </form>
+
+            </section>
+
+
+            <!-- Listagem de produtos -->
+            <section
+                id="produtos"
+                class="secao-estoque"
+            >
+
+                <div class="titulo-listagem">
+
+                    <div>
+                        <span class="identificador-pagina">INVENTÁRIO</span>
+                        <h3>Seus produtos</h3>
+                        <p>Consulte e gerencie os itens cadastrados.</p>
+                    </div>
+
+                </div>
+
+
+                <!-- Pesquisa e resumo da listagem -->
+                <div class="area-consulta">
+
+                    <div class="campo-busca">
+
+                        <span class="icone-busca">⌕</span>
+
+                        <input
+                            type="search"
+                            id="busca-produto"
+                            placeholder="Pesquisar produto..."
+                            aria-label="Pesquisar produto pelo nome"
+                        >
+
+                    </div>
+
+                    <p id="resumo" class="mensagem-resumo"></p>
+
+                </div>
+
+
+                <!-- Os cartões dos produtos são gerados pelo JavaScript -->
+                <div id="lista-produtos" class="lista-produtos"></div>
+
+            </section>
+
+            <footer class="rodape-conteudo">
+                <p>StockFlow · Controle de Estoque</p>
+            </footer>
+
+        </main>
+
+    </div>
+
 </body>
+
 </html>

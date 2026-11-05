@@ -1,153 +1,919 @@
 
-/* Configurações gerais da página */
-body {
-    background-color: #f5f7fa;
-    color: #222;
-    font-family: Arial, sans-serif;
-    margin: 15px;
+/* ========================================
+   1. IDENTIDADE VISUAL
+======================================== */
+
+:root {
+    --cor-fundo: #f5f7fb;
+    --cor-superficie: #ffffff;
+
+    --cor-sidebar: #17243a;
+    --cor-sidebar-hover: #243651;
+
+    --cor-texto: #1e293b;
+    --cor-texto-secundario: #718096;
+
+    --cor-primaria: #4778e6;
+    --cor-primaria-hover: #3565ce;
+
+    --cor-borda: #e8edf4;
+
+    --cor-sucesso: #159b72;
+    --cor-sucesso-fundo: #e8f7f1;
+
+    --cor-alerta: #d99020;
+    --cor-alerta-fundo: #fff6e5;
+
+    --cor-erro: #dc5555;
+    --cor-erro-hover: #c63f3f;
+    --cor-erro-fundo: #fff0f0;
+
+    --sombra-card: 0 4px 18px rgba(30, 50, 80, 0.045);
+    --sombra-hover: 0 8px 24px rgba(30, 50, 80, 0.08);
+
+    --raio-card: 14px;
 }
 
-/* Área principal do conteúdo */
-main {
-    max-width: 1000px;
-    margin: 35px auto;
-    padding: 0 20px;
-}
 
-/* Cartões das seções principais */
-section {
-    background-color: #fff;
-    padding: 24px;
-    margin-bottom: 24px;
-    border-radius: 8px;
-    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.05);
-}
+/* ========================================
+   2. CONFIGURAÇÕES GERAIS
+======================================== */
 
-/* Campos de entrada */
-input {
-    padding: 4px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    width: 100%;
+* {
     box-sizing: border-box;
-    margin-bottom: 8px;
-    display: block;
+    margin: 0;
+    padding: 0;
 }
 
-/* Textos dos campos */
-label {
-    font-weight: bold;
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 24px;
+}
+
+body {
+    min-height: 100vh;
+    background: var(--cor-fundo);
+    color: var(--cor-texto);
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
     font-size: 14px;
+    line-height: 1.5;
 }
 
-/* Estilo padrão dos botões */
+button,
+input {
+    font: inherit;
+}
+
 button {
-    background-color: #007bff;
-    color: #ffffff;
-    padding: 6px 10px;
-    border: none;
-    border-radius: 10px;
-    font-weight: bold;
     cursor: pointer;
-    margin-top: 10px;
 }
 
-/* Efeito ao passar o mouse nos botões padrão */
-button:hover {
-    background-color: #007bffcb;
+a {
+    color: inherit;
+    text-decoration: none;
 }
 
-/* Aviso de estoque baixo */
-.estoque-baixo {
-    color: #dc2626;
-    font-weight: bold;
-}
 
-/* Cartão individual de cada produto */
-.cartao-produto {
-    background-color: #ffffff;
-    padding: 16px;
-    margin-bottom: 12px;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
+/* ========================================
+   3. ESTRUTURA PRINCIPAL
+======================================== */
 
-/* Área que organiza os botões do produto */
-.area-botoes {
+.layout {
     display: flex;
+    min-height: 100vh;
+}
+
+
+/* ========================================
+   4. MENU LATERAL
+======================================== */
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
+
+    display: flex;
+    flex-direction: column;
+
+    width: 250px;
+    height: 100vh;
+    padding: 30px 20px 22px;
+
+    background: var(--cor-sidebar);
+    color: #ffffff;
+}
+
+.identidade {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 0 8px 34px;
+}
+
+.identidade-icone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 43px;
+    height: 43px;
+
+    border-radius: 12px;
+    background: linear-gradient(135deg, #5488f5, #3265d2);
+
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+
+    box-shadow: 0 4px 12px rgba(55, 105, 220, 0.3);
+}
+
+.identidade-texto h1 {
+    color: #ffffff;
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.4px;
+}
+
+.identidade-texto span {
+    display: block;
+    margin-top: 2px;
+
+    color: #a5b3c8;
+    font-size: 11px;
+}
+
+.navegacao {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.navegacao-titulo {
+    margin: 0 10px 12px;
+
+    color: #8393aa;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.1px;
+}
+
+.item-navegacao {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    min-height: 46px;
+    padding: 0 13px;
+
+    border-radius: 9px;
+
+    color: #b6c2d3;
+    font-size: 13px;
+    font-weight: 500;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.item-navegacao:hover {
+    background: var(--cor-sidebar-hover);
+    color: #ffffff;
+}
+
+.item-navegacao.ativo {
+    background: #2d4263;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.item-navegacao.ativo .icone-navegacao {
+    color: #78a3ff;
+}
+
+.icone-navegacao {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 22px;
+
+    color: #9eafc7;
+    font-size: 19px;
+}
+
+.sidebar-rodape {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
     gap: 8px;
-    margin-top: 12px;
+
+    margin-top: auto;
+    padding: 17px 10px 0;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.09);
+
+    color: #b6c2d3;
+    font-size: 11px;
 }
 
-/* Espaçamento interno dos botões dos produtos */
-.area-botoes button {
-    padding: 8px 14px;
-    cursor: pointer;
+.status-sistema {
+    width: 8px;
+    height: 8px;
+
+    border-radius: 50%;
+    background: #35c995;
+
+    box-shadow: 0 0 0 4px rgba(53, 201, 149, 0.12);
 }
 
-/* Botão de editar */
-.botao-editar {
-    background-color: #2563eb;
-    color: #ffffff;
+.sidebar-rodape small {
+    width: 100%;
+    margin-left: 16px;
+
+    color: #8494aa;
+    font-size: 10px;
+}
+
+
+/* ========================================
+   5. CONTEÚDO PRINCIPAL
+======================================== */
+
+.conteudo-principal {
+    width: calc(100% - 250px);
+    max-width: 1600px;
+    min-height: 100vh;
+
+    margin-left: 250px;
+    padding: 38px 48px 24px;
+}
+
+.cabecalho {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+
+    margin-bottom: 38px;
+}
+
+.identificador-pagina {
+    display: block;
+    margin-bottom: 7px;
+
+    color: var(--cor-primaria);
+    font-size: 10px;
+    font-weight: 750;
+    letter-spacing: 1.2px;
+}
+
+.cabecalho-texto h2 {
+    color: var(--cor-texto);
+    font-size: 27px;
+    font-weight: 750;
+    letter-spacing: -0.9px;
+}
+
+.cabecalho-texto p,
+.titulo-secao p,
+.titulo-listagem p {
+    margin-top: 5px;
+
+    color: var(--cor-texto-secundario);
+    font-size: 13px;
+}
+
+.usuario-sistema {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    color: var(--cor-texto);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.usuario-icone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 36px;
+    height: 36px;
+
+    border: 1px solid #dce7fa;
+    border-radius: 50%;
+
+    background: #eaf1ff;
+    color: var(--cor-primaria);
+
+    font-weight: 700;
+}
+
+
+/* ========================================
+   6. TÍTULOS E SEÇÕES
+======================================== */
+
+.secao-indicadores,
+.secao-cadastro,
+.secao-estoque {
+    margin-bottom: 27px;
+}
+
+.titulo-secao,
+.titulo-listagem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 17px;
+}
+
+.titulo-secao h3,
+.titulo-listagem h3 {
+    color: var(--cor-texto);
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+}
+
+
+/* ========================================
+   7. INDICADORES
+======================================== */
+
+.indicadores {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.cartao-indicador {
+    display: flex;
+    align-items: center;
+    gap: 17px;
+
+    min-height: 112px;
+    padding: 22px 24px;
+
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--raio-card);
+
+    background: var(--cor-superficie);
+    box-shadow: var(--sombra-card);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.cartao-indicador:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--sombra-hover);
+}
+
+.indicador-icone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    width: 47px;
+    height: 47px;
+
+    border-radius: 13px;
+    background: #edf3ff;
+
+    color: var(--cor-primaria);
+    font-size: 19px;
+    font-weight: 700;
+}
+
+.indicador-icone-valor {
+    background: #e9f7f1;
+    color: var(--cor-sucesso);
+    font-size: 13px;
+}
+
+.indicador-conteudo {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.indicador-conteudo span {
+    color: var(--cor-texto-secundario);
+    font-size: 12px;
+}
+
+.indicador-conteudo strong {
+    color: var(--cor-texto);
+    font-size: 24px;
+    font-weight: 750;
+    letter-spacing: -0.7px;
+}
+
+
+/* ========================================
+   8. FORMULÁRIO DE CADASTRO
+======================================== */
+
+.secao-cadastro {
+    padding: 25px;
+
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--raio-card);
+
+    background: var(--cor-superficie);
+    box-shadow: var(--sombra-card);
+}
+
+.secao-cadastro .titulo-secao {
+    margin-bottom: 21px;
+}
+
+.form-produto {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr auto;
+    align-items: end;
+    gap: 15px;
+}
+
+.campo-formulario {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+}
+
+.campo-formulario label {
+    color: #46546a;
+    font-size: 12px;
+    font-weight: 650;
+}
+
+.campo-formulario input,
+.campo-busca input {
+    width: 100%;
+    min-width: 0;
+    height: 44px;
+    padding: 0 13px;
+
+    border: 1px solid var(--cor-borda);
+    border-radius: 8px;
+    outline: none;
+
+    background: #ffffff;
+    color: var(--cor-texto);
+
+    font-size: 13px;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.campo-formulario input::placeholder,
+.campo-busca input::placeholder {
+    color: #a0aabb;
+}
+
+.campo-formulario input:focus,
+.campo-busca input:focus {
+    border-color: var(--cor-primaria);
+    box-shadow: 0 0 0 3px rgba(71, 120, 230, 0.11);
+}
+
+.acao-formulario {
+    display: flex;
+}
+
+.botao-principal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+
+    min-height: 44px;
+    padding: 0 17px;
+
     border: none;
-    border-radius: 6px;
-}
+    border-radius: 8px;
 
-/* Botão de excluir */
-.botao-excluir {
-    background-color: #dc2626;
+    background: var(--cor-primaria);
     color: #ffffff;
-    border: none;
-    border-radius: 6px;
+
+    font-size: 12px;
+    font-weight: 650;
+    white-space: nowrap;
+
+    box-shadow: 0 3px 8px rgba(71, 120, 230, 0.18);
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
 }
 
-/* Efeito ao passar o mouse no botão de editar */
-.botao-editar:hover {
-    background-color: #1d4ed8;
+.botao-principal:hover {
+    transform: translateY(-1px);
+    background: var(--cor-primaria-hover);
+    box-shadow: 0 5px 12px rgba(71, 120, 230, 0.23);
 }
 
-/* Efeito ao passar o mouse no botão de excluir */
-.botao-excluir:hover {
-    background-color: #b91c1c;
+.botao-principal span {
+    font-size: 17px;
 }
 
-/* Nome do produto no cartão */
+
+/* ========================================
+   9. PESQUISA E LISTAGEM
+======================================== */
+
+.area-consulta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+
+    margin-bottom: 17px;
+}
+
+.campo-busca {
+    position: relative;
+    width: 100%;
+    max-width: 390px;
+}
+
+.campo-busca input {
+    padding-left: 40px;
+    background: #ffffff;
+}
+
+.icone-busca {
+    position: absolute;
+    top: 50%;
+    left: 14px;
+
+    transform: translateY(-53%);
+
+    color: #8b98aa;
+    font-size: 22px;
+    pointer-events: none;
+}
+
+.mensagem-resumo {
+    color: var(--cor-texto-secundario);
+    font-size: 12px;
+    text-align: right;
+}
+
+
+/* ========================================
+   10. CARTÕES DE PRODUTO
+======================================== */
+
+.lista-produtos {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 17px;
+}
+
+.cartao-produto {
+    min-width: 0;
+    padding: 21px;
+
+    border: 1px solid var(--cor-borda);
+    border-radius: 12px;
+
+    background: var(--cor-superficie);
+    box-shadow: var(--sombra-card);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.cartao-produto:hover {
+    transform: translateY(-2px);
+    border-color: #d8e2f2;
+    box-shadow: var(--sombra-hover);
+}
+
 .nome-produto {
-    font-size: 18px;
-    color: #1e293b;
-    margin-top: 0;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+
+    color: var(--cor-texto);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+
+    overflow-wrap: anywhere;
 }
 
-/* Texto das informações do produto */
 .cartao-produto p {
-    margin-top: 0;
-    margin-bottom: 12px;
+    margin-top: 8px;
+
+    color: var(--cor-texto-secundario);
+    font-size: 12px;
     line-height: 1.6;
 }
 
-/* Ajustes para telas pequenas, como celulares */
-@media (max-width: 600px) {
-    /* Reduz as margens externas */
-    body {
-        margin: 10px;
+.estoque-baixo {
+    display: inline-block;
+
+    margin-top: 12px !important;
+    padding: 5px 9px;
+
+    border: 1px solid #f5d9a4;
+    border-radius: 6px;
+
+    background: var(--cor-alerta-fundo);
+    color: #a76b0d !important;
+
+    font-size: 11px !important;
+    font-weight: 650;
+}
+
+.area-botoes {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 8px;
+
+    margin-top: 19px;
+    padding-top: 15px;
+
+    border-top: 1px solid var(--cor-borda);
+}
+
+.area-botoes button {
+    min-height: 34px;
+    padding: 0 13px;
+
+    border: 1px solid transparent;
+    border-radius: 7px;
+
+    font-size: 11px;
+    font-weight: 650;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.area-botoes button:hover {
+    transform: translateY(-1px);
+}
+
+.botao-editar {
+    border-color: #dce7fb !important;
+    background: #edf3ff;
+    color: #3565ce;
+}
+
+.botao-editar:hover {
+    border-color: #b9cff7 !important;
+    background: #dfeaff;
+}
+
+.botao-excluir {
+    border-color: #f5dada !important;
+    background: #fff1f1;
+    color: var(--cor-erro);
+}
+
+.botao-excluir:hover {
+    border-color: #edbcbc !important;
+    background: #ffe4e4;
+}
+
+
+/* ========================================
+   11. AVISOS E ESTADOS
+======================================== */
+
+.aviso-armazenamento {
+    margin-bottom: 22px;
+    padding: 13px 16px;
+
+    border: 1px solid #f0caca;
+    border-radius: 9px;
+
+    background: var(--cor-erro-fundo);
+    color: #b63838;
+
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.aviso-armazenamento[hidden] {
+    display: none;
+}
+
+button:focus-visible,
+a:focus-visible {
+    outline: 3px solid rgba(71, 120, 230, 0.35);
+    outline-offset: 3px;
+}
+
+
+/* ========================================
+   12. RODAPÉ
+======================================== */
+
+.rodape-conteudo {
+    margin-top: 42px;
+    padding: 18px 0 5px;
+
+    border-top: 1px solid var(--cor-borda);
+
+    color: #9aa5b5;
+    font-size: 11px;
+    text-align: center;
+}
+
+
+/* ========================================
+   13. TABLETS
+======================================== */
+
+@media (max-width: 1100px) {
+
+    .conteudo-principal {
+        padding: 32px 28px 22px;
     }
 
-    /* Reduz o espaço interno das seções principais */
-    main section {
-        padding: 16px;
+    .form-produto {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    /* Permite que os botões se reorganizem */
-    .area-botoes {
-        flex-wrap: wrap;
+    .acao-formulario {
+        grid-column: 1 / -1;
     }
 
-    /* Mantém os botões confortáveis para tocar */
+    .botao-principal {
+        width: 100%;
+    }
+
+}
+
+
+/* ========================================
+   14. CELULARES
+======================================== */
+
+@media (max-width: 700px) {
+
+    .layout {
+        display: block;
+    }
+
+    .sidebar {
+        position: relative;
+
+        width: 100%;
+        height: auto;
+        padding: 17px 18px;
+    }
+
+    .identidade {
+        padding: 0 3px 17px;
+    }
+
+    .navegacao {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 6px;
+    }
+
+    .navegacao-titulo {
+        grid-column: 1 / -1;
+        margin: 0 4px 5px;
+    }
+
+    .item-navegacao {
+        justify-content: center;
+        flex-direction: column;
+        gap: 3px;
+
+        min-height: 61px;
+        padding: 7px 3px;
+
+        font-size: 10px;
+        text-align: center;
+    }
+
+    .icone-navegacao {
+        font-size: 18px;
+    }
+
+    .sidebar-rodape {
+        display: none;
+    }
+
+    .conteudo-principal {
+        width: 100%;
+        margin-left: 0;
+        padding: 27px 17px 20px;
+    }
+
+    .cabecalho {
+        align-items: flex-start;
+        margin-bottom: 28px;
+    }
+
+    .cabecalho-texto h2 {
+        font-size: 23px;
+    }
+
+    .usuario-sistema {
+        font-size: 0;
+    }
+
+    .usuario-icone {
+        flex-shrink: 0;
+    }
+
+    .indicadores {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .cartao-indicador {
+        min-height: 95px;
+        padding: 17px;
+    }
+
+    .secao-cadastro {
+        padding: 19px;
+    }
+
+    .form-produto {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+
+    .acao-formulario {
+        grid-column: auto;
+    }
+
+    .lista-produtos {
+        grid-template-columns: 1fr;
+    }
+
+    .area-consulta {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .campo-busca {
+        max-width: none;
+    }
+
+    .mensagem-resumo {
+        text-align: left;
+    }
+
+}
+
+
+/* ========================================
+   15. TELAS MUITO PEQUENAS
+======================================== */
+
+@media (max-width: 380px) {
+
+    .conteudo-principal {
+        padding-right: 12px;
+        padding-left: 12px;
+    }
+
+    .item-navegacao {
+        font-size: 9px;
+    }
+
+    .cartao-indicador {
+        gap: 12px;
+    }
+
+    .indicador-conteudo strong {
+        font-size: 21px;
+    }
+
     .area-botoes button {
         flex: 1;
-        min-width: 100px;
     }
+
 }
