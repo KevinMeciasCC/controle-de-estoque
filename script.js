@@ -11,7 +11,7 @@ const resumo = document.getElementById("resumo");
 const avisoArmazenamento = document.getElementById("erro-armazenamento");
 const valorTotal = document.getElementById("valor-total");
 
-// Validação dos produtos
+// Verifica se os dados de um produto são válidos
 function produtoValido(produto) {
     return produto !== null
         && typeof produto === "object"
@@ -31,7 +31,7 @@ function produtoValido(produto) {
         );
 }
 
-// Produtos iniciais
+// Produtos utilizados quando não existem dados salvos
 const produtosIniciais = [
     {
         nome: "Água sem gás",
@@ -66,7 +66,7 @@ function registrarErroArmazenamento(mensagem, erro = null) {
 
     avisoArmazenamento.hidden = false;
 
-    // Mantém os detalhes técnicos disponíveis para diagnóstico
+    // Exibe os detalhes técnicos no console
     if (erro !== null) {
         console.error(mensagem, erro);
     } else {
@@ -74,7 +74,7 @@ function registrarErroArmazenamento(mensagem, erro = null) {
     }
 }
 
-// Recuperação dos dados
+// Recuperação dos produtos salvos
 let produtos = produtosIniciais;
 let armazenamento = null;
 let dadosValidos = false;
@@ -85,7 +85,7 @@ try {
     if (armazenamento !== null) {
         const dadosSalvos = JSON.parse(armazenamento);
 
-        // Só utiliza os dados salvos quando toda a lista é válida
+        // Verifica se todos os produtos recuperados são válidos
         if (
             Array.isArray(dadosSalvos)
             && dadosSalvos.every(produtoValido)
@@ -105,7 +105,7 @@ try {
     );
 }
 
-// Migração do estoque mínimo
+// Atualiza produtos antigos que ainda não possuem estoque mínimo
 const precisaAtualizar = produtos.some(function(produto) {
     return produto.estoqueMinimo === undefined;
 });
@@ -118,7 +118,7 @@ if (precisaAtualizar) {
     });
 }
 
-// Salvamento seguro
+// Salva uma lista de produtos no armazenamento
 function salvarProdutos(lista) {
     try {
         localStorage.setItem("produtos", JSON.stringify(lista));
@@ -133,7 +133,7 @@ function salvarProdutos(lista) {
     }
 }
 
-// Salva os produtos iniciais ou persiste a migração
+// Salva os produtos iniciais ou a atualização dos dados antigos
 if (
     !erroArmazenamento
     && (
@@ -157,29 +157,51 @@ function mostrarProdutos() {
     for (let i = 0; i < produtos.length; i++) {
         const produtoAtual = produtos[i];
 
+        // Calcula o valor total de todo o estoque
         valorTotalEstoque +=
             produtoAtual.preco * produtoAtual.quantidade;
 
-        // Os indicadores consideram todos os produtos, não apenas os pesquisados
+        // Os indicadores consideram todos os produtos,
+        // independentemente da pesquisa
         if (produtoAtual.quantidade <= produtoAtual.estoqueMinimo) {
             totalEstoqueBaixo++;
         }
 
+        // Ignora produtos que não correspondem à pesquisa
         if (!produtoAtual.nome.toLowerCase().includes(textoBusca)) {
             continue;
         }
 
         totalEncontrados++;
 
+        // Cria o cartão do produto
         const item = document.createElement("div");
         item.classList.add("cartao-produto");
+
+        // Cabeçalho do cartão
+        const cabecalhoProduto = document.createElement("div");
+        cabecalhoProduto.classList.add("cabecalho-produto");
 
         const nomeProduto = document.createElement("h3");
         nomeProduto.textContent = produtoAtual.nome;
         nomeProduto.classList.add("nome-produto");
 
-        const informacoes = document.createElement("p");
+        // Identifica a situação atual do estoque
+        const statusEstoque = document.createElement("span");
+        statusEstoque.classList.add("status-estoque");
 
+        if (produtoAtual.quantidade <= produtoAtual.estoqueMinimo) {
+            statusEstoque.textContent = "Estoque baixo";
+            statusEstoque.classList.add("estoque-baixo");
+        } else {
+            statusEstoque.textContent = "Estoque saudável";
+            statusEstoque.classList.add("estoque-normal");
+        }
+
+        cabecalhoProduto.appendChild(nomeProduto);
+        cabecalhoProduto.appendChild(statusEstoque);
+
+        // Formata os valores monetários
         const precoFormatado = produtoAtual.preco.toLocaleString(
             "pt-BR",
             {
@@ -199,27 +221,59 @@ function mostrarProdutos() {
             }
         );
 
-        informacoes.textContent =
-            "Preço unitário: " + precoFormatado
-            + " - Quantidade: " + produtoAtual.quantidade
-            + " - Estoque mínimo: " + produtoAtual.estoqueMinimo
-            + " - Valor em estoque: " + totalProdutoFormatado;
+        // Organiza as informações do produto
+        const detalhesProduto = document.createElement("div");
+        detalhesProduto.classList.add("detalhes-produto");
 
-        item.appendChild(nomeProduto);
-        item.appendChild(informacoes);
+        const informacoesProduto = [
+            {
+                rotulo: "Preço unitário",
+                valor: precoFormatado
+            },
+            {
+                rotulo: "Quantidade",
+                valor: produtoAtual.quantidade + " unidades"
+            },
+            {
+                rotulo: "Estoque mínimo",
+                valor: produtoAtual.estoqueMinimo + " unidades"
+            },
+            {
+                rotulo: "Valor em estoque",
+                valor: totalProdutoFormatado,
+                destaque: true
+            }
+        ];
 
-        if (produtoAtual.quantidade <= produtoAtual.estoqueMinimo) {
-            const avisoEstoque = document.createElement("p");
+        // Cria um bloco visual para cada informação
+        informacoesProduto.forEach(function(informacao) {
+            const bloco = document.createElement("div");
+            bloco.classList.add("informacao-produto");
 
-            avisoEstoque.textContent = "ESTOQUE BAIXO!";
-            avisoEstoque.classList.add("estoque-baixo");
+            const rotulo = document.createElement("span");
+            rotulo.textContent = informacao.rotulo;
+            rotulo.classList.add("rotulo-informacao");
 
-            item.appendChild(avisoEstoque);
-        }
+            const valor = document.createElement("strong");
+            valor.textContent = informacao.valor;
+            valor.classList.add("valor-informacao");
 
-        // Exclusão de produtos
+            if (informacao.destaque) {
+                valor.classList.add("valor-destaque");
+            }
+
+            bloco.appendChild(rotulo);
+            bloco.appendChild(valor);
+
+            detalhesProduto.appendChild(bloco);
+        });
+
+        // Adiciona o cabeçalho e os detalhes ao cartão
+        item.appendChild(cabecalhoProduto);
+        item.appendChild(detalhesProduto);
+
+        // Botão para excluir o produto
         const botaoExcluir = document.createElement("button");
-
         botaoExcluir.textContent = "Excluir";
         botaoExcluir.classList.add("botao-excluir");
 
@@ -244,7 +298,7 @@ function mostrarProdutos() {
             const novaLista = [...produtos];
             novaLista.splice(i, 1);
 
-            // Só atualiza a lista após confirmar que o salvamento funcionou
+            // Só atualiza a lista depois de salvar com sucesso
             const salvou = salvarProdutos(novaLista);
 
             if (!salvou) {
@@ -259,9 +313,8 @@ function mostrarProdutos() {
             mostrarProdutos();
         });
 
-        // Edição de produtos
+        // Botão para editar o produto
         const botaoEditar = document.createElement("button");
-
         botaoEditar.textContent = "Editar";
         botaoEditar.classList.add("botao-editar");
 
@@ -337,9 +390,8 @@ function mostrarProdutos() {
             mostrarProdutos();
         });
 
-        // Organização dos botões
+        // Organiza os botões na parte inferior do cartão
         const areaBotoes = document.createElement("div");
-
         areaBotoes.classList.add("area-botoes");
 
         areaBotoes.appendChild(botaoExcluir);
@@ -349,7 +401,7 @@ function mostrarProdutos() {
         listaProdutos.appendChild(item);
     }
 
-    // Atualização dos indicadores
+    // Atualiza os indicadores do painel
     resumoEstoque.textContent =
         "Produtos com estoque baixo: " + totalEstoqueBaixo;
 
@@ -363,6 +415,7 @@ function mostrarProdutos() {
             }
         );
 
+    // Exibe uma mensagem quando a lista estiver vazia
     if (produtos.length === 0) {
         resumo.textContent = "Nenhum produto cadastrado.";
     } else if (totalEncontrados === 0) {
@@ -372,15 +425,15 @@ function mostrarProdutos() {
     }
 }
 
-// Pesquisa de produtos
+// Atualiza a listagem enquanto o usuário pesquisa
 campoBusca.addEventListener("input", function() {
     mostrarProdutos();
 });
 
-// Carregamento inicial
+// Carrega os produtos ao abrir a página
 mostrarProdutos();
 
-// Cadastro de produtos
+// Cadastro de novos produtos
 formulario.addEventListener("submit", function(event) {
     event.preventDefault();
 
@@ -396,6 +449,7 @@ formulario.addEventListener("submit", function(event) {
     const preco = Number(campoPreco.value);
     const quantidade = Number(campoQuantidade.value);
 
+    // Verifica os dados preenchidos no formulário
     if (
         nome.trim() === ""
         || !Number.isFinite(preco)
@@ -416,6 +470,7 @@ formulario.addEventListener("submit", function(event) {
 
     const novaLista = [...produtos, produto];
 
+    // Só atualiza a lista depois de salvar com sucesso
     const salvou = salvarProdutos(novaLista);
 
     if (!salvou) {
