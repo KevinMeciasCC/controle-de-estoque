@@ -1,5 +1,5 @@
 
-// Seleção dos elementos HTML
+// Elementos principais da página
 const formulario = document.getElementById("form-produto");
 const campoNome = document.getElementById("nome");
 const campoPreco = document.getElementById("preco");
@@ -11,7 +11,7 @@ const resumo = document.getElementById("resumo");
 const avisoArmazenamento = document.getElementById("erro-armazenamento");
 const valorTotal = document.getElementById("valor-total");
 
-// Verifica se os dados de um produto são válidos
+// Verifica se os dados de um produto estão corretos
 function produtoValido(produto) {
     return produto !== null
         && typeof produto === "object"
@@ -31,7 +31,16 @@ function produtoValido(produto) {
         );
 }
 
-// Produtos utilizados quando não existem dados salvos
+// Padroniza os textos para permitir pesquisas sem acentos
+function normalizarTexto(texto) {
+    return texto
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .trim();
+}
+
+// Produtos utilizados na primeira execução
 const produtosIniciais = [
     {
         nome: "Água sem gás",
@@ -66,7 +75,6 @@ function registrarErroArmazenamento(mensagem, erro = null) {
 
     avisoArmazenamento.hidden = false;
 
-    // Exibe os detalhes técnicos no console
     if (erro !== null) {
         console.error(mensagem, erro);
     } else {
@@ -74,7 +82,7 @@ function registrarErroArmazenamento(mensagem, erro = null) {
     }
 }
 
-// Recuperação dos produtos salvos
+// Recupera os produtos salvos no navegador
 let produtos = produtosIniciais;
 let armazenamento = null;
 let dadosValidos = false;
@@ -85,7 +93,6 @@ try {
     if (armazenamento !== null) {
         const dadosSalvos = JSON.parse(armazenamento);
 
-        // Verifica se todos os produtos recuperados são válidos
         if (
             Array.isArray(dadosSalvos)
             && dadosSalvos.every(produtoValido)
@@ -105,7 +112,7 @@ try {
     );
 }
 
-// Atualiza produtos antigos que ainda não possuem estoque mínimo
+// Adiciona um estoque mínimo aos produtos de versões anteriores
 const precisaAtualizar = produtos.some(function(produto) {
     return produto.estoqueMinimo === undefined;
 });
@@ -118,7 +125,7 @@ if (precisaAtualizar) {
     });
 }
 
-// Salva uma lista de produtos no armazenamento
+// Salva os dados e informa se a operação funcionou
 function salvarProdutos(lista) {
     try {
         localStorage.setItem("produtos", JSON.stringify(lista));
@@ -133,7 +140,7 @@ function salvarProdutos(lista) {
     }
 }
 
-// Salva os produtos iniciais ou a atualização dos dados antigos
+// Salva os produtos iniciais ou registra a migração
 if (
     !erroArmazenamento
     && (
@@ -144,11 +151,35 @@ if (
     salvarProdutos(produtos);
 }
 
-// Exibição dos produtos
+// Cria um bloco de informação para os cartões
+function criarInformacao(rotulo, valor, destaque = false) {
+    const informacao = document.createElement("div");
+    informacao.classList.add("informacao-produto");
+
+    const textoRotulo = document.createElement("span");
+    textoRotulo.classList.add("rotulo-informacao");
+    textoRotulo.textContent = rotulo;
+
+    const textoValor = document.createElement("span");
+    textoValor.classList.add("valor-informacao");
+    textoValor.textContent = valor;
+
+    if (destaque) {
+        textoValor.classList.add("valor-destaque");
+    }
+
+    informacao.appendChild(textoRotulo);
+    informacao.appendChild(textoValor);
+
+    return informacao;
+}
+
+// Exibe os produtos e atualiza os indicadores
 function mostrarProdutos() {
     listaProdutos.textContent = "";
 
-    const textoBusca = campoBusca.value.toLowerCase().trim();
+    // A pesquisa ignora diferenças entre letras maiúsculas e acentos
+    const textoBusca = normalizarTexto(campoBusca.value);
 
     let totalEstoqueBaixo = 0;
     let totalEncontrados = 0;
@@ -157,51 +188,55 @@ function mostrarProdutos() {
     for (let i = 0; i < produtos.length; i++) {
         const produtoAtual = produtos[i];
 
-        // Calcula o valor total de todo o estoque
-        valorTotalEstoque +=
+        const valorTotalProduto =
             produtoAtual.preco * produtoAtual.quantidade;
 
-        // Os indicadores consideram todos os produtos,
-        // independentemente da pesquisa
-        if (produtoAtual.quantidade <= produtoAtual.estoqueMinimo) {
+        valorTotalEstoque += valorTotalProduto;
+
+        const estoqueBaixo =
+            produtoAtual.quantidade <= produtoAtual.estoqueMinimo;
+
+        // Os indicadores consideram todos os produtos cadastrados
+        if (estoqueBaixo) {
             totalEstoqueBaixo++;
         }
 
-        // Ignora produtos que não correspondem à pesquisa
-        if (!produtoAtual.nome.toLowerCase().includes(textoBusca)) {
+        // Compara os nomes já normalizados
+        const nomeNormalizado = normalizarTexto(produtoAtual.nome);
+
+        if (!nomeNormalizado.includes(textoBusca)) {
             continue;
         }
 
         totalEncontrados++;
 
-        // Cria o cartão do produto
+        // Cartão principal do produto
         const item = document.createElement("div");
         item.classList.add("cartao-produto");
 
-        // Cabeçalho do cartão
+        // Nome e situação do estoque
         const cabecalhoProduto = document.createElement("div");
         cabecalhoProduto.classList.add("cabecalho-produto");
 
         const nomeProduto = document.createElement("h3");
-        nomeProduto.textContent = produtoAtual.nome;
         nomeProduto.classList.add("nome-produto");
+        nomeProduto.textContent = produtoAtual.nome;
 
-        // Identifica a situação atual do estoque
         const statusEstoque = document.createElement("span");
         statusEstoque.classList.add("status-estoque");
 
-        if (produtoAtual.quantidade <= produtoAtual.estoqueMinimo) {
-            statusEstoque.textContent = "Estoque baixo";
+        if (estoqueBaixo) {
             statusEstoque.classList.add("estoque-baixo");
+            statusEstoque.textContent = "Estoque baixo";
         } else {
-            statusEstoque.textContent = "Estoque saudável";
             statusEstoque.classList.add("estoque-normal");
+            statusEstoque.textContent = "Estoque normal";
         }
 
         cabecalhoProduto.appendChild(nomeProduto);
         cabecalhoProduto.appendChild(statusEstoque);
 
-        // Formata os valores monetários
+        // Formatação dos valores monetários
         const precoFormatado = produtoAtual.preco.toLocaleString(
             "pt-BR",
             {
@@ -209,9 +244,6 @@ function mostrarProdutos() {
                 currency: "BRL"
             }
         );
-
-        const valorTotalProduto =
-            produtoAtual.preco * produtoAtual.quantidade;
 
         const totalProdutoFormatado = valorTotalProduto.toLocaleString(
             "pt-BR",
@@ -221,56 +253,29 @@ function mostrarProdutos() {
             }
         );
 
-        // Organiza as informações do produto
+        // Informações organizadas em blocos separados
         const detalhesProduto = document.createElement("div");
         detalhesProduto.classList.add("detalhes-produto");
 
-        const informacoesProduto = [
-            {
-                rotulo: "Preço unitário",
-                valor: precoFormatado
-            },
-            {
-                rotulo: "Quantidade",
-                valor: produtoAtual.quantidade + " unidades"
-            },
-            {
-                rotulo: "Estoque mínimo",
-                valor: produtoAtual.estoqueMinimo + " unidades"
-            },
-            {
-                rotulo: "Valor em estoque",
-                valor: totalProdutoFormatado,
-                destaque: true
-            }
-        ];
+        detalhesProduto.appendChild(
+            criarInformacao("Preço unitário", precoFormatado)
+        );
 
-        // Cria um bloco visual para cada informação
-        informacoesProduto.forEach(function(informacao) {
-            const bloco = document.createElement("div");
-            bloco.classList.add("informacao-produto");
+        detalhesProduto.appendChild(
+            criarInformacao("Quantidade", produtoAtual.quantidade)
+        );
 
-            const rotulo = document.createElement("span");
-            rotulo.textContent = informacao.rotulo;
-            rotulo.classList.add("rotulo-informacao");
+        detalhesProduto.appendChild(
+            criarInformacao("Estoque mínimo", produtoAtual.estoqueMinimo)
+        );
 
-            const valor = document.createElement("strong");
-            valor.textContent = informacao.valor;
-            valor.classList.add("valor-informacao");
-
-            if (informacao.destaque) {
-                valor.classList.add("valor-destaque");
-            }
-
-            bloco.appendChild(rotulo);
-            bloco.appendChild(valor);
-
-            detalhesProduto.appendChild(bloco);
-        });
-
-        // Adiciona o cabeçalho e os detalhes ao cartão
-        item.appendChild(cabecalhoProduto);
-        item.appendChild(detalhesProduto);
+        detalhesProduto.appendChild(
+            criarInformacao(
+                "Valor em estoque",
+                totalProdutoFormatado,
+                true
+            )
+        );
 
         // Botão para excluir o produto
         const botaoExcluir = document.createElement("button");
@@ -288,7 +293,7 @@ function mostrarProdutos() {
 
             const confirmou = confirm(
                 "Tem certeza que deseja excluir o produto "
-                + produtos[i].nome + "?"
+                + produtoAtual.nome + "?"
             );
 
             if (!confirmou) {
@@ -298,7 +303,6 @@ function mostrarProdutos() {
             const novaLista = [...produtos];
             novaLista.splice(i, 1);
 
-            // Só atualiza a lista depois de salvar com sucesso
             const salvou = salvarProdutos(novaLista);
 
             if (!salvou) {
@@ -390,32 +394,33 @@ function mostrarProdutos() {
             mostrarProdutos();
         });
 
-        // Organiza os botões na parte inferior do cartão
+        // Organização dos botões do cartão
         const areaBotoes = document.createElement("div");
         areaBotoes.classList.add("area-botoes");
 
-        areaBotoes.appendChild(botaoExcluir);
         areaBotoes.appendChild(botaoEditar);
+        areaBotoes.appendChild(botaoExcluir);
 
+        // Montagem final do cartão
+        item.appendChild(cabecalhoProduto);
+        item.appendChild(detalhesProduto);
         item.appendChild(areaBotoes);
+
         listaProdutos.appendChild(item);
     }
 
-    // Atualiza os indicadores do painel
-    resumoEstoque.textContent =
-        "Produtos com estoque baixo: " + totalEstoqueBaixo;
+    // Atualiza os indicadores sem repetir os rótulos do HTML
+    resumoEstoque.textContent = totalEstoqueBaixo;
 
-    valorTotal.textContent =
-        "Valor total do estoque: "
-        + valorTotalEstoque.toLocaleString(
-            "pt-BR",
-            {
-                style: "currency",
-                currency: "BRL"
-            }
-        );
+    valorTotal.textContent = valorTotalEstoque.toLocaleString(
+        "pt-BR",
+        {
+            style: "currency",
+            currency: "BRL"
+        }
+    );
 
-    // Exibe uma mensagem quando a lista estiver vazia
+    // Mensagens exibidas conforme o resultado da pesquisa
     if (produtos.length === 0) {
         resumo.textContent = "Nenhum produto cadastrado.";
     } else if (totalEncontrados === 0) {
@@ -430,7 +435,7 @@ campoBusca.addEventListener("input", function() {
     mostrarProdutos();
 });
 
-// Carrega os produtos ao abrir a página
+// Exibe os produtos ao abrir a página
 mostrarProdutos();
 
 // Cadastro de novos produtos
@@ -449,7 +454,6 @@ formulario.addEventListener("submit", function(event) {
     const preco = Number(campoPreco.value);
     const quantidade = Number(campoQuantidade.value);
 
-    // Verifica os dados preenchidos no formulário
     if (
         nome.trim() === ""
         || !Number.isFinite(preco)
@@ -470,7 +474,6 @@ formulario.addEventListener("submit", function(event) {
 
     const novaLista = [...produtos, produto];
 
-    // Só atualiza a lista depois de salvar com sucesso
     const salvou = salvarProdutos(novaLista);
 
     if (!salvou) {
